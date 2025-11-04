@@ -17,7 +17,10 @@ test:
 	PYTHONPATH=src pytest -q --maxfail=1
 
 run:
-	PYTHONPATH=src $(PY) -m graph_attention_networks.cli
+	python3 -m graph_attention_networks.cli train --config configs/default.yaml
 
 train:
-	PYTHONPATH=src $(PY) -c "from graph_attention_networks.train import train; print(train())"
+	python3 -m graph_attention_networks.cli train --config configs/default.yaml --epochs 50
+
+eval:
+	python3 -m graph_attention_networks.cli eval --model models/gat_cora.pt
