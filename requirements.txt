@@ -1,0 +1,18 @@
+torch
+torch-geometric
+numpy
+pandas
+scikit-learn
+matplotlib
+tqdm
+pyyaml
+rich
+
+# Dev tools
+pytest
+pytest-cov
+black
+isort
+flake8
+mypy
+pre-commit

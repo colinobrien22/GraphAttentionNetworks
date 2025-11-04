@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.idea/
+.vscode/
+*.egg-info/
+
+# Data / artifacts
+data/processed/
+data/external/
+models/
+results/
+experiments/
+*.ckpt
+*.pt
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
