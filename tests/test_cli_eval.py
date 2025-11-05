@@ -1,57 +1,60 @@
 import json
+import os
+import sys
 from pathlib import Path
+
+import pytest
 
 from graph_attention_networks.cli import main as cli_main
 
+CI = os.getenv("CI") == "true"
+requires_data = pytest.mark.skipif(CI, reason="Skip dataset download/train in CI")
 
+
+@requires_data
 def test_train_one_epoch_creates_artifacts(monkeypatch, tmp_path, capsys):
-    # run in temp dir so artifacts don't pollute repo
+    # Work in an isolated temp dir
     monkeypatch.chdir(tmp_path)
 
-    # minimal config in temp dir
+    # Minimal config in temp dir
     (tmp_path / "configs").mkdir()
     (tmp_path / "configs" / "default.yaml").write_text(
-        "seed: 0\nepochs: 1\nhidden: 8\nheads: 8\ndropout: 0.6\nlr: 0.005\nweight_decay: 0.0005\n"
+        "seed: 0\n"
+        "epochs: 1\n"
+        "hidden: 8\n"
+        "heads: 8\n"
+        "dropout: 0.6\n"
+        "lr: 0.005\n"
+        "weight_decay: 0.0005\n"
     )
 
-    # call CLI: train
-    monkeypatch.setenv("PYTHONWARNINGS", "ignore")  # quieter output
-    import sys
-
-    sys.argv = ["ganet", "train", "--config", "configs/default.yaml"]
+    # Simulate CLI call: train
+    sys.argv = [
+        "python3",
+        "-m",
+        "graph_attention_networks.cli",
+        "train",
+        "--config",
+        "configs/default.yaml",
+    ]
     cli_main()
 
-    # artifacts exist?
+    # Artifacts should exist
     assert Path("results/metrics.json").exists()
     assert Path("results/metrics_epoch.csv").exists()
-    # checkpoint saved on first (best) val
     assert Path("models/gat_cora.pt").exists()
 
-    # metrics.json is valid json
+    # metrics.json should be valid JSON
     data = json.loads(Path("results/metrics.json").read_text())
-    assert "epoch" in data and "test" in data
+    assert "epoch" in data and "val" in data and "test" in data
 
 
-def test_eval_loads_checkpoint(monkeypatch, tmp_path):
-    # reuse previous test’s structure; create dummy files quickly
+def test_eval_raises_if_no_checkpoint(monkeypatch, tmp_path):
+    # No training here; just confirm evaluate() errors cleanly without a ckpt
     monkeypatch.chdir(tmp_path)
-    (tmp_path / "results").mkdir(parents=True)
-    (tmp_path / "models").mkdir(parents=True)
-    # tiny metrics file
-    (tmp_path / "results" / "metrics.json").write_text(
-        '{"epoch":1,"val":0.1,"test":0.1}'
-    )
-    # if no real model, skip gracefully
-    # (evaluation will raise if missing; that's fine to assert)
+    (tmp_path / "models").mkdir(parents=True, exist_ok=True)
+
     from graph_attention_networks.eval import evaluate
 
-    try:
-        (tmp_path / "configs").mkdir(exist_ok=True)
-        # If a real run hasn't produced the model, expect FileNotFoundError:
-        try:
-            evaluate(model_path="models/gat_cora.pt")
-        except FileNotFoundError:
-            pass
-    except Exception as e:
-        # Any other exception means something else went wrong
-        raise AssertionError(f"Unexpected error during eval: {e}")
+    with pytest.raises(FileNotFoundError):
+        evaluate(model_path="models/gat_cora.pt")

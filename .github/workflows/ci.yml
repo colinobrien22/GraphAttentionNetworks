@@ -39,7 +39,7 @@ jobs:
       - name: Run tests
         env:
           PYTHONPATH: src
-        run: pytest -q
+        run: pytest -q -m "not requires_data"
 
       - name: Upload results artifacts
         if: always()  # upload even if tests fail

@@ -1,14 +1,20 @@
-import json
+import os
+import sys
 from pathlib import Path
+
+import pytest
 
 from graph_attention_networks.cli import main as cli_main
 
+CI = os.getenv("CI") == "true"
+requires_data = pytest.mark.skipif(CI, reason="Skip dataset download/train in CI")
 
+
+@requires_data
 def test_train_then_eval_confmat(monkeypatch, tmp_path, capsys):
-    # work in a temp directory
     monkeypatch.chdir(tmp_path)
 
-    # minimal config
+    # Minimal config
     (tmp_path / "configs").mkdir()
     (tmp_path / "configs" / "default.yaml").write_text(
         "seed: 0\n"
@@ -20,9 +26,7 @@ def test_train_then_eval_confmat(monkeypatch, tmp_path, capsys):
         "weight_decay: 0.0005\n"
     )
 
-    # train one epoch (creates checkpoint + metrics)
-    import sys
-
+    # Train 1 epoch
     sys.argv = [
         "python3",
         "-m",
@@ -32,12 +36,9 @@ def test_train_then_eval_confmat(monkeypatch, tmp_path, capsys):
         "configs/default.yaml",
     ]
     cli_main()
-
     assert Path("models/gat_cora.pt").exists()
-    assert Path("results/metrics.json").exists()
-    _ = json.loads(Path("results/metrics.json").read_text())
 
-    # eval (should also produce a confusion matrix plot)
+    # Eval should generate confusion_matrix.png
     sys.argv = [
         "python3",
         "-m",
@@ -47,5 +48,4 @@ def test_train_then_eval_confmat(monkeypatch, tmp_path, capsys):
         "models/gat_cora.pt",
     ]
     cli_main()
-
     assert Path("results/confusion_matrix.png").exists()
