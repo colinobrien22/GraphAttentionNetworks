@@ -1,13 +1,19 @@
-def test_cli_runs(capsys):
+import sys
+
+import pytest
+
+
+def test_cli_help_runs(capsys, monkeypatch):
+    # Simulate: python3 -m graph_attention_networks.cli -h
+    monkeypatch.setattr(
+        sys, "argv", ["python3", "-m", "graph_attention_networks.cli", "-h"]
+    )
     from graph_attention_networks.cli import main
 
-    main()
-    out = capsys.readouterr().out
-    assert "placeholder" in out.lower()
+    # argparse exits 0 on -h
+    with pytest.raises(SystemExit) as e:
+        main()
+    assert e.value.code == 0
 
-
-def test_pkg_imports():
-    import importlib
-
-    pkg = importlib.import_module("graph_attention_networks")
-    assert pkg is not None
+    out = capsys.readouterr().out + capsys.readouterr().err
+    assert "Graph Attention Networks on Cora" in out
