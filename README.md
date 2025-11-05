@@ -1,5 +1,5 @@
 # 🧠 Graph Attention Networks (GAT) on Cora
-Node classification on the [Cora citation network](https://relational.fit.cvut.cz/dataset/CORA) using a Graph Attention Network implemented with PyTorch Geometric.
+Node classification on the [Cora citation network](https://relational.fel.cvut.cz/dataset/CORA) using a Graph Attention Network implemented with PyTorch Geometric.
 
 ![CI](https://github.com/colinobrien22/GraphAttentionNetworks/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)
