@@ -16,3 +16,15 @@ cd GraphAttentionNetworks
 python3 -m venv .venv && source .venv/bin/activate
 python3 -m pip install -r requirements.txt
 python3 -m pip install -e .
+
+### Usage
+
+Train (YAML config):
+```bash
+python3 -m graph_attention_networks.cli train --config configs/default.yaml
+
+Train (override from CLI)
+python3 -m graph_attention_networks.cli train --epochs 100 --hidden 16 --heads 4
+
+Evaluate
+python3 -m graph_attention_networks.cli eval --model models/gat_cora.pt

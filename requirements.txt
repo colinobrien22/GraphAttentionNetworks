@@ -1,18 +1,19 @@
-torch
-torch-geometric
-numpy
-pandas
-scikit-learn
-matplotlib
-tqdm
-pyyaml
-rich
+# Core
+torch>=2.3,<2.5
+torch-geometric>=2.5,<3.0
+numpy>=1.26
+pandas>=2.2
+scikit-learn>=1.4
+matplotlib>=3.8
+tqdm>=4.66
+pyyaml>=6.0
+rich>=13.7
 
-# Dev tools
-pytest
-pytest-cov
-black
-isort
-flake8
-mypy
-pre-commit
+# Dev / tooling
+pytest>=8.0
+pytest-cov>=5.0
+black>=24.4
+isort>=5.13
+flake8>=7.0
+mypy>=1.9
+pre-commit>=3.7
