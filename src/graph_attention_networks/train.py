@@ -1,4 +1,4 @@
-# src/graph_attention_networks/train.py
+import csv
 import json
 from pathlib import Path
 
@@ -21,6 +21,25 @@ def accuracy(logits, y, mask):
     correct = int((pred[mask] == y[mask]).sum())
     total = int(mask.sum())
     return correct / total if total else 0.0
+
+
+def _plot_learning_curve():
+    try:
+        import matplotlib.pyplot as plt
+        import pandas as pd
+
+        df = pd.read_csv("results/metrics_epoch.csv")
+        plt.figure()
+        plt.plot(df["epoch"], df["acc_train"], label="train")
+        plt.plot(df["epoch"], df["acc_val"], label="val")
+        plt.plot(df["epoch"], df["acc_test"], label="test")
+        plt.xlabel("epoch")
+        plt.ylabel("accuracy")
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig("results/curve.png")
+    except Exception as e:
+        print(f"Plot skipped: {e}")
 
 
 def train(
@@ -53,6 +72,12 @@ def train(
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
 
+    # init CSV
+    csv_path = Path("results/metrics_epoch.csv")
+    with csv_path.open("w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["epoch", "loss", "acc_train", "acc_val", "acc_test"])
+
     best_val = 0.0
     best_snapshot = {"epoch": 0, "val": 0.0, "test": 0.0}
 
@@ -73,6 +98,12 @@ def train(
             acc_val = accuracy(logits, data.y, data.val_mask)
             acc_test = accuracy(logits, data.y, data.test_mask)
 
+        # append row to CSV
+        with csv_path.open("a", newline="") as f:
+            w = csv.writer(f)
+            w.writerow([epoch, float(loss.item()), acc_train, acc_val, acc_test])
+
+        # save best checkpoint
         if acc_val > best_val:
             best_val = acc_val
             best_snapshot = {"epoch": epoch, "val": acc_val, "test": acc_test}
@@ -84,7 +115,11 @@ def train(
                 f"train={acc_train:.3f} val={acc_val:.3f} test={acc_test:.3f}"
             )
 
+    # write best snapshot
     with open("results/metrics.json", "w") as f:
         json.dump(best_snapshot, f, indent=2)
+
+    # try to plot
+    _plot_learning_curve()
 
     return best_snapshot
