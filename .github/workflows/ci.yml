@@ -50,15 +50,4 @@ jobs:
             results/**
             models/**
           if-no-files-found: ignore
-	      overwrite: true
-
-      - name: Upload results artifacts
-        if: always()  # upload even if tests fail, for debugging
-        uses: actions/upload-artifact@v4
-        with:
-          name: results-artifacts
-          path: |
-            results/**
-            models/**
-          if-no-files-found: ignore
-	      overwrite: true
+          overwrite: true
