@@ -28,3 +28,8 @@ python3 -m graph_attention_networks.cli train --epochs 100 --hidden 16 --heads 4
 
 Evaluate
 python3 -m graph_attention_networks.cli eval --model models/gat_cora.pt
+
+
+
+
+<img src="results/curve.png" width="420"/> <img src="results/confusion_matrix.png" width="420"/>
