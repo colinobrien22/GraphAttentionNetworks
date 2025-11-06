@@ -1,0 +1,35 @@
+Config: {
+  "seed": 0,
+  "epochs": 200,
+  "hidden": 8,
+  "heads": 8,
+  "dropout": 0.6,
+  "lr": 0.005,
+  "weight_decay": 0.0005
+}
+[001] loss=1.9446 | train=0.421 val=0.252 test=0.240
+[010] loss=1.8893 | train=0.900 val=0.770 test=0.793
+[020] loss=1.7965 | train=0.879 val=0.700 test=0.699
+[030] loss=1.6725 | train=0.929 val=0.748 test=0.745
+[040] loss=1.5797 | train=0.950 val=0.796 test=0.793
+[050] loss=1.3620 | train=0.957 val=0.804 test=0.790
+[060] loss=1.3069 | train=0.979 val=0.822 test=0.841
+[070] loss=1.1732 | train=0.986 val=0.800 test=0.812
+[080] loss=1.0246 | train=0.986 val=0.810 test=0.821
+[090] loss=0.9671 | train=0.993 val=0.812 test=0.833
+[100] loss=0.9901 | train=0.986 val=0.812 test=0.827
+[110] loss=0.8875 | train=0.986 val=0.808 test=0.820
+[120] loss=0.9045 | train=0.993 val=0.812 test=0.827
+[130] loss=0.7881 | train=0.986 val=0.806 test=0.817
+[140] loss=0.8685 | train=0.993 val=0.806 test=0.833
+[150] loss=0.8173 | train=0.986 val=0.814 test=0.821
+[160] loss=0.7639 | train=0.993 val=0.808 test=0.826
+[170] loss=0.7816 | train=0.986 val=0.804 test=0.813
+[180] loss=0.7137 | train=0.986 val=0.808 test=0.829
+[190] loss=0.7029 | train=0.993 val=0.806 test=0.819
+[200] loss=0.7042 | train=0.993 val=0.804 test=0.818
+Best snapshot: {
+  "epoch": 58,
+  "val": 0.826,
+  "test": 0.833
+}
