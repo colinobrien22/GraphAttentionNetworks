@@ -1,0 +1,43 @@
+## Demo Video Script — Graph Attention Networks on Cora
+
+**Approximate duration:** 2–3 minutes
+
+
+---
+
+**[Start recording with your Colab notebook visible at the top cell.]**
+
+> Hi everyone, I’m [NAME], and I’ll be demonstrating our group’s implementation of Graph Attention Networks for node classification on the Cora dataset.
+>
+> GATs were introduced by Veličković et al. (2018) as an extension of Graph Convolutional Networks. The key idea is that each node learns how much to “listen” to its neighbors through an attention mechanism, instead of treating all neighboring nodes equally. That allows the model to adaptively weigh relationships—ideal for citation networks like Cora, where some connections matter more than others.
+
+**[Scroll to the setup cell and run it.]**
+
+> We trained and evaluated our model entirely in Google Colab, using Python 3.11, PyTorch 2.0, and Torch-Geometric 2.4.
+> Here you can see the environment setup and the dataset loading process. The Cora dataset includes roughly 2,700 nodes (papers) and 5,400 citation links, each represented by a 1,433-dimensional feature vector.
+
+**[Show the code cell that initializes and prints the model.]**
+
+> The architecture closely follows the original GAT paper: one hidden layer with eight units and eight attention heads, followed by a single-head output layer for the seven research categories.
+> Dropout and the ELU activation are used to enhance generalization, and we train with cross-entropy loss optimized using Adam.
+
+**[Run the training cell.]**
+
+> Now I’ll start the training loop. Each epoch logs the training and validation accuracy.
+> You’ll see accuracy rise steadily—by around epoch 50, validation accuracy stabilizes near 82%, and the final test accuracy reaches 83.3%, which reproduces the benchmark result from the original GAT paper.
+
+**[Show the learning curve and confusion matrix plots.]**
+
+> Here we have the learning curve, which shows smooth convergence without overfitting.
+> On the right is the normalized confusion matrix, where performance is balanced across all seven categories, with especially strong accuracy in larger classes such as Neural Networks and Reinforcement Learning.
+
+**[Scroll through the results directory briefly.]**
+
+> All generated artifacts—including metrics, plots, and checkpoints—are automatically saved to the `results/` and `models/` directories, ensuring that the experiment is fully reproducible.
+
+**[Wrap up.]**
+
+> In summary, our reimplementation of Graph Attention Networks on Cora confirms that attention-based message passing improves the flexibility and interpretability of graph neural networks.
+> Beyond reproducing benchmark accuracy, our project demonstrates clean, reproducible research code—complete with YAML configuration, automated logging, and CI/CD integration.
+>
+> Thanks for watching, and we look forward to discussing possible extensions, such as multi-hop attention or transformer-based graph models, in our presentation.
